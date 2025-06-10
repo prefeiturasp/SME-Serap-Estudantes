@@ -62,6 +62,6 @@ When("o aluno envia a prova com dados inválidos", () => {
   }).as("response");
 });
 
-Then("a API deve retornar um erro com status 500", () => {
-  cy.get("@response").its("status").should("eq", 500);
+Then("a API deve retornar um erro com status 400", () => {
+  cy.get("@response").its("status").should("eq", 400);
 });
