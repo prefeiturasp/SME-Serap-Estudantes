@@ -1,23 +1,75 @@
-const { defineConfig } = require("cypress");
-const createBundler = require("@bahmutov/cypress-esbuild-preprocessor");
-const createEsbuildPlugin = require("@badeball/cypress-cucumber-preprocessor/esbuild").createEsbuildPlugin;
-const addCucumberPreprocessorPlugin = require("@badeball/cypress-cucumber-preprocessor").addCucumberPreprocessorPlugin;
+const { defineConfig } = require('cypress');
+const allureWriter = require('@shelex/cypress-allure-plugin/writer');
+const dotenv = require('dotenv');
+const cucumber = require('cypress-cucumber-preprocessor').default;
+const postgreSQL = require('cypress-postgresql');
+const pg = require('pg');
+
+dotenv.config();
+
+const dbConfig = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+};
 
 module.exports = defineConfig({
   e2e: {
-    specPattern: "**/*.feature",
-    supportFile: "cypress/support/e2e.js",
-    reporter: "mochawesome",
-    reporterOptions: {
-      reportDir: "cypress/reports",
-      overwrite: false,
-      html: true,
-      json: true
-    },
     async setupNodeEvents(on, config) {
-      await addCucumberPreprocessorPlugin(on, config);
-      on("file:preprocessor", createBundler({ plugins: [createEsbuildPlugin(config)] }));
-      return config;
-    }
-  }
+
+      allureWriter(on, config);
+
+      on('file:preprocessor', cucumber());
+
+      const pool = new pg.Pool(dbConfig);
+      const tasks = postgreSQL.loadDBPlugin(pool);
+      on('task', tasks);
+
+      const envKeys = [
+        'ALUNO_RA', 
+        'DATA_NASC',
+        'DISPOSITIVO',
+      ];
+
+      const customVariable = Object.fromEntries(
+        envKeys.map((key) => [key, process.env[key] ?? ''])
+      );
+
+      const enhancedConfig = {
+        ...config,
+        env: {
+          ...config.env,
+          ...customVariable,
+        },
+      };
+
+      return enhancedConfig;
+    },
+
+    baseUrl: 'http://hom-serap-estudante.sme.prefeitura.sp.gov.br',
+    supportFile: 'cypress/support/e2e.js',
+    viewportWidth: 1600,
+    viewportHeight: 1050,
+    video: false,
+    retries: {
+      runMode: 2,
+      openMode: 0,
+    },
+    screenshotOnRunFailure: false,
+    chromeWebSecurity: false,
+    experimentalRunAllSpecs: true,
+    failOnStatusCode: false,
+
+    specPattern: [
+      'cypress/e2e/**/*.feature'
+    ],
+
+    defaultCommandTimeout: 60000,
+    requestTimeout: 60000,
+    execTimeout: 60000,
+    pageLoadTimeout: 60000,
+    waitForAnimations: true,
+    animationDistanceThreshold: 5,
+  },
 });
