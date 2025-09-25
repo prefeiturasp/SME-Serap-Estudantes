@@ -1,20 +1,21 @@
 Cypress.Commands.add('gerar_token', () => {
   return cy.request({
     method: 'POST',
-    url: 'https://hom-serap-estudante.sme.prefeitura.sp.gov.br/api/v1/autenticacao',
+    url: `${Cypress.config('baseUrl')}/api/v1/autenticacao`,
     headers: {
-      'accept': '*/*',
-      'content-type': 'application/json; charset=utf-8',
+      accept: 'application/json',
+      'content-type': 'application/json'
     },
     body: {
-      login: '5937723',
-      senha: '14062011',
-      dispositivo: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)...'
+      login: Cypress.env('ALUNO_RA'),
+      senha: Cypress.env('DATA_NASC'),
+      dispositivo: Cypress.env('DISPOSITIVO')
     },
     failOnStatusCode: false
   }).then((response) => {
+    console.log('Resposta da API:', response.body)
     if (response.status !== 200) {
-      throw new Error(`Authentication failed with status: ${response.status}`)
+      throw new Error(`Authentication failed with status: ${response.status} - ${JSON.stringify(response.body)}`)
     }
     return response.body.token
   })

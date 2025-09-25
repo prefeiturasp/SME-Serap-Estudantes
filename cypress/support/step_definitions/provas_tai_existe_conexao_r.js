@@ -27,7 +27,7 @@ When('envio uma requisição GET para o endpoint de existe conexão', function (
 
 Then('retorna status 200 de confirmação', function () {
   cy.get('@response').then((response) => {
-    expect([200, 405]).to.include(response.status)
+    expect(response.status).to.eq(200)
   })
 })
 
@@ -49,6 +49,6 @@ When('tento a requisição GET para o endpoint de existe conexão', function () 
 
 Then('retorna o status 401 não permitindo verificar', function () {
   cy.get('@response').then((response) => {
-    expect([401, 405]).to.include(response.status)
+    expect(response.status).to.eq(401)
   })
 })
