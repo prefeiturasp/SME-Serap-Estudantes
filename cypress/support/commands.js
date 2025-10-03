@@ -1,25 +1,22 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add('gerar_token', () => {
+  return cy.request({
+    method: 'POST',
+    url: `${Cypress.config('baseUrl')}/api/v1/autenticacao`,
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json'
+    },
+    body: {
+      login: Cypress.env('ALUNO_RA'),
+      senha: Cypress.env('DATA_NASC'),
+      dispositivo: Cypress.env('DISPOSITIVO')
+    },
+    failOnStatusCode: false
+  }).then((response) => {
+    console.log('Resposta da API:', response.body)
+    if (response.status !== 200) {
+      throw new Error(`Authentication failed with status: ${response.status} - ${JSON.stringify(response.body)}`)
+    }
+    return response.body.token
+  })
+})
