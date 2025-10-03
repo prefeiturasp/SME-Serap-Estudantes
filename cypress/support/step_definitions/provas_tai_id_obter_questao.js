@@ -16,7 +16,7 @@ Given('que possuo um token de acesso valido', function () {
 When('envio uma requisição POST de obter questão', function () { 
   return cy.request({
     method: 'POST',
-    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/599/obter-questao`,
+    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/${Cypress.env('PROVA_TAI_ID')}/obter-questao`,
     headers: {
       accept: '*/*',
       Authorization: `Bearer ${token}`
@@ -27,7 +27,7 @@ When('envio uma requisição POST de obter questão', function () {
 
 Then('retorna status 200 de sucesso', function () {
   cy.get('@response').then((response) => {
-    expect([200, 405]).to.include(response.status)
+    expect(response.status).to.eq(200)
   })
 })
 
@@ -57,7 +57,7 @@ Given('que não possuo um token de acesso valido', () => {
 When('tento a requisição POST de obter questão', function () { 
   return cy.request({
     method: 'POST',
-    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/599/obter-questao`,
+    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/${Cypress.env('PROVA_TAI_ID')}/obter-questao`,
     headers: {
      accept: '*/*',
      Authorization: 'Bearer token_invalido'
@@ -68,6 +68,6 @@ When('tento a requisição POST de obter questão', function () {
 
 Then('não retorna a questão com status 401', function () {
   cy.get('@response').then((response) => {
-    expect([401, 405]).to.include(response.status)
+    expect(response.status).to.eq(401)
   })
 })

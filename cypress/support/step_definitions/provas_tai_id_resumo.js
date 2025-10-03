@@ -16,7 +16,7 @@ Given('que possuo um token de acesso valido', function () {
 When('envio uma requisição GET de resumo prova TAI', function () { 
   return cy.request({
     method: 'GET',
-    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/599/resumo`,
+    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/${Cypress.env('PROVA_TAI_ID')}/resumo`,
     headers: {
       accept: 'text/plain',
       Authorization: `Bearer ${token}`
@@ -57,10 +57,10 @@ Given('que nao possuo um token de acesso valido', () => {
 When('tento a requisição GET de resumo da prova TAI', function () { 
   return cy.request({
     method: 'GET',
-    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/599/resumo`,
+    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/${Cypress.env('PROVA_TAI_ID')}/resumo`,
     headers: {
-     accept: 'application/json',
-     Authorization: 'Bearer token_invalido'
+      accept: 'application/json',
+      Authorization: 'Bearer token_invalido'
     },
     failOnStatusCode: false
   }).as('response')

@@ -16,10 +16,16 @@ Given('que possuo um token de acesso valido', function () {
 When('envio uma requisição POST para iniciar', function () { 
   return cy.request({
     method: 'POST',
-    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/599/iniciar-prova`,
+    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/${Cypress.env('PROVA_TAI_ID')}/iniciar-prova`,
     headers: {
       accept: 'text/plain',
       Authorization: `Bearer ${token}`
+    },
+     body: {
+      status: Cypress.env('STATUS'),
+      tipoDispositivo: Cypress.env('TIPO_DISPOSITIVO'),
+      dataInicio: Cypress.env('DATA_INICIO'),
+      dataFim: Cypress.env('DATA_FIM')      
     },
     failOnStatusCode: false
   }).as('response')
@@ -27,7 +33,7 @@ When('envio uma requisição POST para iniciar', function () {
 
 Then('retorna status 200 que a prova foi iniciada', function () {
   cy.get('@response').then((response) => {
-    expect([200, 405]).to.include(response.status)
+    expect(response.status).to.be.oneOf([200, 422])
   })
 })
 
@@ -39,6 +45,12 @@ When('envio uma requisição POST para iniciar sem o ID', function () {
     headers: {
       accept: 'text/plain',
       Authorization: `Bearer ${token}`
+    },
+    body: {
+      status: Cypress.env('STATUS'),
+      tipoDispositivo: Cypress.env('TIPO_DISPOSITIVO'),
+      dataInicio: Cypress.env('DATA_INICIO'),
+      dataFim: Cypress.env('DATA_FIM')      
     },
     failOnStatusCode: false
   }).as('response')
@@ -57,10 +69,16 @@ Given('que não possuo um token de acesso valido', () => {
 When('tento a requisição POST de iniciar prova', function () { 
   return cy.request({
     method: 'POST',
-    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/599/iniciar-prova`,
+    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/${Cypress.env('PROVA_TAI_ID')}/iniciar-prova`,
     headers: {
      accept: 'text/plain',
      Authorization: 'Bearer token_invalido'
+    },
+    body: {
+      status: Cypress.env('STATUS'),
+      tipoDispositivo: Cypress.env('TIPO_DISPOSITIVO'),
+      dataInicio: Cypress.env('DATA_INICIO'),
+      dataFim: Cypress.env('DATA_FIM')      
     },
     failOnStatusCode: false
   }).as('response')
@@ -68,6 +86,6 @@ When('tento a requisição POST de iniciar prova', function () {
 
 Then('a prova não é iniciada retornando o status 401', function () {
   cy.get('@response').then((response) => {
-    expect([401, 405]).to.include(response.status)
+    expect(response.status).to.eq(401)
   })
 })

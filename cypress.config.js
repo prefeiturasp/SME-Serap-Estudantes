@@ -1,40 +1,50 @@
-const { defineConfig } = require('cypress');
-const allureWriter = require('@shelex/cypress-allure-plugin/writer');
-const dotenv = require('dotenv');
-const cucumber = require('cypress-cucumber-preprocessor').default;
-const postgreSQL = require('cypress-postgresql');
-const pg = require('pg');
+const { defineConfig } = require('cypress')
+const allureWriter = require('@shelex/cypress-allure-plugin/writer')
+const dotenv = require('dotenv')
+const cucumber = require('cypress-cucumber-preprocessor').default
+const postgreSQL = require('cypress-postgresql')
+const pg = require('pg')
 
-dotenv.config();
+dotenv.config()
 
 const dbConfig = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
   database: process.env.DB_DATABASE,
-};
+}
 
 module.exports = defineConfig({
   e2e: {
     async setupNodeEvents(on, config) {
+      allureWriter(on, config)
+      on('file:preprocessor', cucumber())
 
-      allureWriter(on, config);
-
-      on('file:preprocessor', cucumber());
-
-      const pool = new pg.Pool(dbConfig);
-      const tasks = postgreSQL.loadDBPlugin(pool);
-      on('task', tasks);
+      const pool = new pg.Pool(dbConfig)
+      const tasks = postgreSQL.loadDBPlugin(pool)
+      on('task', tasks)
 
       const envKeys = [
-        'ALUNO_RA', 
+        'ALUNO_RA',
         'DATA_NASC',
+        'DATA_NASC_INVALIDA',
         'DISPOSITIVO',
-      ];
+        'DISPOSITIVO_ID',
+        'STATUS',
+        'TIPO_DISPOSITIVO',
+        'DATA_INICIO',
+        'DATA_FIM',
+        'PROVA_TAI_ID',
+        'QUESTAO_ID',
+        'ALTERNATIVA_ID',
+        'RESPOSTA',
+        'DATA_HORA_RESPOSTA_TICKS',
+        'TEMPO_RESPOSTA_ALUNO'
+      ]
 
       const customVariable = Object.fromEntries(
         envKeys.map((key) => [key, process.env[key] ?? ''])
-      );
+      )
 
       const enhancedConfig = {
         ...config,
@@ -42,12 +52,12 @@ module.exports = defineConfig({
           ...config.env,
           ...customVariable,
         },
-      };
+      }
 
-      return enhancedConfig;
+      return enhancedConfig
     },
 
-    baseUrl: 'http://hom-serap-estudante.sme.prefeitura.sp.gov.br',
+    baseUrl: 'https://hom-serap-estudante.sme.prefeitura.sp.gov.br',
     supportFile: 'cypress/support/e2e.js',
     viewportWidth: 1600,
     viewportHeight: 1050,
@@ -72,4 +82,4 @@ module.exports = defineConfig({
     waitForAnimations: true,
     animationDistanceThreshold: 5,
   },
-});
+})

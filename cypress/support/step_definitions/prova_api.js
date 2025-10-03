@@ -11,7 +11,7 @@ Given("o endpoint da API de prova está disponível", () => {
     url: endpoint,
     failOnStatusCode: false,
   }).then((res) => {
-    cy.log("Status do endpoint:", res.status);
+    cy.log("Status do endpoint:", res.status);  
     expect([200, 204, 400, 405, 500]).to.include(res.status);
   });
 });
