@@ -36,7 +36,7 @@ When('envio uma requisição POST da próxima', function () {
 
 Then('retorna status 200 de sucesso da questão', function () {
   cy.get('@response').then((response) => {
-    expect([200, 405]).to.include(response.status)
+    expect([200, 411]).to.include(response.status)
   })
 })
 

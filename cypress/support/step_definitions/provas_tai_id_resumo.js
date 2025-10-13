@@ -8,7 +8,7 @@ Before(() => {
   })
 })
 
-Given('que possuo um token de acesso valido', function () {
+Given('que possuo um token de acesso válido', function () {
   expect(token, 'valido').to.exist
 })
 
@@ -51,7 +51,7 @@ Then('retorna status 404', function () {
 })
 
 // Nao retorna resumo sem autenticação
-Given('que nao possuo um token de acesso valido', () => {  
+Given('que não possuo um token de acesso valido', () => {  
 })
 
 When('tento a requisição GET de resumo da prova TAI', function () { 
@@ -66,7 +66,7 @@ When('tento a requisição GET de resumo da prova TAI', function () {
   }).as('response')
 })
 
-Then('nao verifica o status 401', function () {
+Then('não verifica o status 401', function () {
   cy.get('@response').then((response) => {
     expect(response.status).to.eq(401)
   })

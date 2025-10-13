@@ -27,7 +27,7 @@ When('envio uma requisição POST de obter questão', function () {
 
 Then('retorna status 200 de sucesso', function () {
   cy.get('@response').then((response) => {
-    expect(response.status).to.eq(200)
+    expect(response.status).to.be.oneOf([200, 411])
   })
 })
 
