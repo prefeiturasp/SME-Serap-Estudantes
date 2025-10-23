@@ -1,3 +1,4 @@
+
 Feature: Consultar alternativa por ID
   Como um cliente da API
   Quero consultar uma alternativa pelo seu ID
@@ -19,4 +20,3 @@ Scenario: Consultar alternativa inexistente
   When eu consulto a alternativa com o ID 99999999
   Then o status da resposta deve ser 500
   And a resposta deve indicar que existem erros
-
