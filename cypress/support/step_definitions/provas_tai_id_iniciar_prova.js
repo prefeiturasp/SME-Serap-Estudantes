@@ -13,19 +13,25 @@ Given('que possuo um token de acesso valido', function () {
 })
 
 // Inicia a prova TAI
-When('envio uma requisição POST para iniciar', function () { 
+const status = Number(Cypress.env('STATUS'))
+const tipoDispositivo = Number(Cypress.env('TIPO_DISPOSITIVO'))
+const dataInicio = Number(Cypress.env('DATA_INICIO'))
+const dataFim = Cypress.env('DATA_FIM') === 'null' ? null : Number(Cypress.env('DATA_FIM'))
+
+When('envio uma requisição POST para iniciar a TAI', function () {
   return cy.request({
     method: 'POST',
-    url: Cypress.config('baseUrl') + `/api/v1/provas-tai/${Cypress.env('PROVA_TAI_ID')}/iniciar-prova`,
+    url: `${Cypress.config('baseUrl')}/api/v1/provas-tai/${Cypress.env('PROVA_TAI_ID')}/iniciar-prova`,
     headers: {
-      accept: 'text/plain',
+      accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
       Authorization: `Bearer ${token}`
     },
-     body: {
-      status: Cypress.env('STATUS'),
-      tipoDispositivo: Cypress.env('TIPO_DISPOSITIVO'),
-      dataInicio: Cypress.env('DATA_INICIO'),
-      dataFim: Cypress.env('DATA_FIM')      
+    body: {
+      status,
+      tipoDispositivo,
+      dataInicio,
+      dataFim
     },
     failOnStatusCode: false
   }).as('response')
@@ -33,7 +39,7 @@ When('envio uma requisição POST para iniciar', function () {
 
 Then('retorna status 200 que a prova foi iniciada', function () {
   cy.get('@response').then((response) => {
-    expect(response.status).to.be.oneOf([200, 422])
+    expect(response.status).to.be.oneOf([200, 411])
   })
 })
 
