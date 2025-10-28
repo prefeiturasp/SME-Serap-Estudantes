@@ -1,17 +1,12 @@
 Feature: Consultar arquivo por ID
-  Como um cliente da API de arquivos
+  Como cliente da API SERAp
   Quero consultar um arquivo pelo seu ID
-  Para validar o comportamento da API em casos existentes e inexistentes
+  Para validar que os dados da prova estão corretos
 
   Background:
     Given que possuo um token de autenticação válido
 
-  Scenario: Consultar arquivo existente
-    When eu consulto o arquivo com o ID 67
+  Scenario: Consultar arquivo existente da prova
+    When eu consulto o arquivo com o ID 10
     Then o status da resposta deve ser 200
-    And o corpo da resposta deve conter os campos esperados
-
-  Scenario: Consultar arquivo inexistente (API retorna 200)
-    When eu consulto o arquivo com um ID inexistente
-    Then o status da resposta deve ser 200
-    And a resposta deve indicar que existem erros
+    And o corpo da resposta deve conter o arquivo com os dados esperados

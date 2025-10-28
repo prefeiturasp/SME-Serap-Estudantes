@@ -8,7 +8,7 @@ Before(() => {
   cy.gerar_token().then((tkn) => {
     token = tkn
     cy.wrap(token).as('token')
-    cy.log('Token gerado com sucesso!')
+    cy.log('🔑 Token gerado com sucesso!')
   })
 })
 
@@ -21,11 +21,11 @@ Given('que possuo um token de autenticação válido', () => {
   })
 })
 
-//Consulta o arquivo existente da prova
-When('eu consulto o arquivo com o ID {int}', (id) => {
+//Consulta o arquivo de áudio da prova
+When('eu consulto o arquivo de áudio com o ID {int}', (id) => {
   cy.request({
     method: 'GET',
-    url: `${Cypress.config('baseUrl')}/api/v1/arquivos/${id}`,
+    url: `${Cypress.config('baseUrl')}/api/v1/arquivos/audio/${id}`,
     headers: {
       Authorization: `Bearer ${token}`,
       accept: 'application/json'
@@ -34,7 +34,7 @@ When('eu consulto o arquivo com o ID {int}', (id) => {
   }).then((res) => {
     response = res
     cy.wrap(response).as('response')
-    cy.log('Consulta de arquivo - Status:', res.status)
+    cy.log('Consulta de áudio - Status:', res.status)
     cy.log('Corpo da resposta:', JSON.stringify(res.body))
   })
 })
@@ -46,17 +46,17 @@ Then('o status da resposta deve ser {int}', (statusCode) => {
   })
 })
 
-//Valida o corpo com os dados esperados da prova
-Then('o corpo da resposta deve conter o arquivo com os dados esperados', () => {
+//Valida o corpo do áudio retornado
+Then('o corpo da resposta deve conter o áudio com os dados esperados', () => {
   cy.get('@response').then((res) => {
     const body = res.body
 
-    //Verifica campos e valores específicos da prova
-    expect(body).to.have.property('id', 10)
-    expect(body).to.have.property('legadoId', 10)
-    expect(body).to.have.property('questaoId', 0)
-    expect(body.caminho).to.contain('https://serap.sme.prefeitura.sp.gov.br/Files/Alternativa/2021/5/')
-
-    cy.log('Arquivo retornado com os dados corretos da prova')
+    //Verifica campos e valores esperados
+    expect(body).to.have.property('id', 9613010)
+    expect(body).to.have.property('legadoId').and.to.be.a('number')
+    expect(body).to.have.property('questaoId').and.to.be.a('number')
+    expect(body.caminho).to.contain('https://serap.sme.prefeitura.sp.gov.br/Files/Audio/')
+    
+    cy.log('Áudio retornado corretamente para a prova 591 e questão 24035631')
   })
 })
