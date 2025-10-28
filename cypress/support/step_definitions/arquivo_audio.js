@@ -8,7 +8,7 @@ Before(() => {
   cy.gerar_token().then((tkn) => {
     token = tkn
     cy.wrap(token).as('token')
-    cy.log('🔑 Token gerado com sucesso!')
+    cy.log('Token gerado com sucesso!')
   })
 })
 
