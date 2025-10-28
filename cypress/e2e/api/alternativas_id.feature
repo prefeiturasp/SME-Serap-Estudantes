@@ -5,15 +5,15 @@ Feature: Consultar alternativa por ID
   Para obter as informações cadastradas
 
 Scenario: Consultar alternativa existente
-    Given que eu possuo um endpoint da API de alternativas
-    When eu consulto a alternativa com o ID 96034733
-    Then o status da resposta deve ser 200
-    And o corpo da resposta deve conter os campos esperados
+  Given que eu possuo um endpoint da API de alternativas
+  When eu consulto a alternativa com o ID 96034733
+  Then o status da resposta deve ser 200
+  And o corpo da resposta deve conter os campos esperados
 
-  Scenario: Consultar alternativa existente sem autenticação
-    Given que eu possuo o endpoint da API de alternativas
-    When tento consultar a alternativa existe sem autenticação com o ID 96034733
-    Then o status da resposta deve ser 401
+Scenario: Consultar alternativa existente sem autenticação
+  Given que eu possuo o endpoint da API de alternativas
+  When tento consultar a alternativa existe sem autenticação com o ID 96034733
+  Then o status da resposta deve ser 401
 
 Scenario: Consultar alternativa inexistente
   Given que eu possuo o endpoint da API de alternativas
