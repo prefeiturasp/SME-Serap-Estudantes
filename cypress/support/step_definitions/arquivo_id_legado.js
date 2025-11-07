@@ -47,7 +47,7 @@ Then('o status da resposta deve ser {int}', (statusCode) => {
   })
 })
 
-//Valida campos esperados
+//Valida campos esperados (para cenário existente)
 Then('o corpo da resposta deve conter os campos esperados', () => {
   cy.get('@response').then((response) => {
     const body = response.body
@@ -56,5 +56,15 @@ Then('o corpo da resposta deve conter os campos esperados', () => {
     expect(body).to.have.property('caminho')
     expect(body).to.have.property('questaoId')
     cy.log('Campos validados com sucesso!')
+  })
+})
+
+//Valida mensagem de erro (para cenário inexistente)
+Then('a mensagem de erro deve ser {string}', (mensagemEsperada) => {
+  cy.get('@response').then((response) => {
+    const body = response.body
+    expect(body).to.have.property('mensagens')
+    expect(body.mensagens[0]).to.eq(mensagemEsperada)
+    cy.log(`Mensagem de erro validada: ${mensagemEsperada}`)
   })
 })
