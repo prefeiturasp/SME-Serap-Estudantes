@@ -7,15 +7,15 @@ Before(() => {
   cy.gerar_token().then((tkn) => {
     token = tkn;
     cy.wrap(token).as('token');
-    cy.log('Token gerado com sucesso!');
+    cy.log('Token foi gerado com sucesso!');
   });
 });
 
-Given('que possuo um token de autenticação válido', () => {
+Given('possuo um token de autenticação válido', () => {
   cy.get('@token').then((tkn) => {
-    expect(tkn, 'Token deve estar definido').to.exist;
+    expect(tkn, 'Token deve estar definido corretamente').to.exist;
     token = tkn;
-    cy.log('Token validado com sucesso');
+    cy.log('Token validado');
   });
 });
 
