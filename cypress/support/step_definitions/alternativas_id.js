@@ -3,27 +3,22 @@ import { Given, When, Then, Before } from 'cypress-cucumber-preprocessor/steps'
 let token
 let response
 
-// 🔹 Gera token de autenticação antes dos testes que precisam dele
+//Gera token de autenticação antes dos testes que precisam dele
 Before(() => {
   cy.gerar_token().then((token_valido) => {
     token = token_valido
   })
 })
 
-// ====================
-// Cenário base
-// ====================
-Given('que eu possuo o endpoint da API de alternativas', () => {
-  // Apenas descritivo — nada a executar
+Given('possuo o endpoint da API de alternativas', () => {
+  
 })
 
-Given('que eu possuo um endpoint da API de alternativas', () => {
-  // Apenas descritivo — mantido para compatibilidade com o primeiro cenário
+Given('possuo um endpoint da API de alternativas', () => {
+  
 })
 
-// ====================
-// Cenário 1 — Alternativa EXISTENTE
-// ====================
+
 When('eu consulto a alternativa com o ID {int}', (id) => {
   cy.request({
     method: 'GET',
