@@ -60,3 +60,31 @@ Then('o corpo da resposta deve conter o áudio com os dados esperados', () => {
     cy.log('Áudio retornado corretamente para a prova 591 e questão 24035631')
   })
 })
+
+//Consulta o vídeo pelo ID
+When('eu consulto o vídeo com o ID {int}', (id) => {
+  cy.request({
+    method: 'GET',
+    url: `${Cypress.config('baseUrl')}/api/v1/videos/${id}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      accept: 'application/json'
+    },
+    failOnStatusCode: false // permite validar status diferentes de 2xx
+  }).then((res) => {
+    response = res
+    cy.wrap(response).as('response')
+    cy.log(`Consulta de vídeo com ID ${id} - Status: ${res.status}`)
+    cy.log('Corpo da resposta:', JSON.stringify(res.body))
+  })
+})
+
+//Valida a mensagem de erro no corpo da resposta
+Then('o corpo da resposta deve conter a mensagem {string}', (mensagemEsperada) => {
+  cy.get('@response').then((res) => {
+    const mensagens = res.body.mensagens
+    expect(mensagens, 'Campo mensagens não encontrado').to.exist
+    expect(mensagens).to.include(mensagemEsperada)
+    cy.log(`Mensagem de erro validada: ${mensagemEsperada}`)
+  })
+})

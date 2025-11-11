@@ -10,3 +10,8 @@ Feature: Consultar arquivo por ID
     When eu consulto o arquivo com o ID 10
     Then o status da resposta deve ser 200
     And o corpo da resposta deve conter o arquivo com os dados esperados
+
+  Scenario: Consultar arquivo inexistente
+    When eu consulto o arquivo com o ID 1099998798
+    Then o status da resposta deve ser 409
+    And o corpo da resposta deve conter a mensagem "O Arquivo não foi encontrado"

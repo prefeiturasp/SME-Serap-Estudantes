@@ -20,3 +20,5 @@ Cypress.Commands.add('gerar_token', () => {
     return response.body.token
   })
 })
+ 
+ 
