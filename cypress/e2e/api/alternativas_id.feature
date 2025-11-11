@@ -1,5 +1,4 @@
-
-Feature: Consultar alternativa por ID
+Feature: Consultar alternativa ID
   Como um cliente da API
   Quero consultar uma alternativa pelo seu ID
   Para obter as informações cadastradas
