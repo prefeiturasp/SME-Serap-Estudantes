@@ -3,19 +3,14 @@ import { Given, When, Then, Before } from 'cypress-cucumber-preprocessor/steps'
 let token
 let response
 
-//Gera token de autenticação antes dos testes que precisam dele
 Before(() => {
   cy.gerar_token().then((token_valido) => {
     token = token_valido
   })
 })
 
-Given('possuo o endpoint da API de alternativas', () => {
-  
-})
-
-Given('possuo um endpoint da API de alternativas', () => {
-  
+Given('que eu possuo o endpoint da API de alternativas', () => {
+ cy.log('Endpoint da API de alternativas configurado.')
 })
 
 
@@ -24,7 +19,7 @@ When('eu consulto a alternativa com o ID {int}', (id) => {
     method: 'GET',
     url: `${Cypress.config('baseUrl')}/api/v1/alternativas/${id}`,
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
     failOnStatusCode: false
   }).as('response')
@@ -48,20 +43,14 @@ Then('o corpo da resposta deve conter os campos esperados', () => {
   })
 })
 
-// ====================
-// Cenário 2 — Sem autenticação
-// ====================
-When('tento consultar a alternativa existe sem autenticação com o ID {int}', (id) => {
+When('tento consultar a alternativa existente sem autenticação com o ID {int}', (id) => {
   cy.request({
     method: 'GET',
     url: `${Cypress.config('baseUrl')}/api/v1/alternativas/${id}`,
-    failOnStatusCode: false // evita que o teste quebre com 401
+    failOnStatusCode: false // evita quebra de teste com 401
   }).as('response')
 })
 
-// ====================
-// Cenário 3 — Alternativa INEXISTENTE
-// ====================
 Then('a resposta deve indicar que existem erros', () => {
   cy.get('@response').then((response) => {
     expect(response.status).to.be.oneOf([400, 404, 500])
